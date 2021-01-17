@@ -6,21 +6,27 @@ var roleHarvester = {
     /** @param {Creep} creep **/
     run: function(creep) {
         
-        
-        //If creep has empty space in storage find energy sources and harvest
-        if (creep.store.getFreeCapacity() != 0) {
+
             
+        if(!creep.memory.harvesting && creep.store.getUsedCapacity() == 0) {
+            creep.memory.harvesting = true;
+        }
             
-            
+        if(creep.memory.harvesting) {
             var sources = creep.room.find(FIND_SOURCES);
             if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
-            
-            
-            
+            if (creep.store.getFreeCapacity() == 0) {
+                creep.memory.harvesting = false;
+            }
         }
-        else {
+            
+            
+        if(!creep.memory.harvesting && creep.store.getUsedCapacity() > 0) {
+            
+            
+            
             //Else look for structures with space for energy
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -28,15 +34,26 @@ var roleHarvester = {
                 }
             });
             
+            var priorityTargets = _.filter(targets, target => target.structureType == STRUCTURE_SPAWN && target.structureType == STRUCTURE_EXTENSION);
+                
             //If structure is found, begin transfer
-            if(targets.length > 0) {
+            if(priorityTargets.length > 0) {
+                if(creep.transfer(priorityTargets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(priorityTargets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }else if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             } else {
-                creep.moveTo(Game.spawns["DannyS"]);
+                creep.moveTo(Game.spawns["DannyS"], {visualizePathStyle: {stroke: '#00ff00'}});
             }
+            
+            if(creep.store.getUsedCapacity() == 0) {creep.memory.harvesting = true;}
+            
         }
+        
+    
     }
 }
 

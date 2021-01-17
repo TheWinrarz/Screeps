@@ -25,11 +25,11 @@ var roleUpgrader = {
             
         }
         else {
-            if (creep.store.getFreeCapacity() > 0 && !Game.getObjectById(creep.memory.homeSpawn.id).memory.spawnWaiting) {
+            if (creep.store.getFreeCapacity() > 0) {
                 //Create object list of all containers in range 30
                 
-                var Containers = creep.pos.findInRange(FIND_STRUCTURES, 30, {
-                    filter: (s) => (s.structureType == STRUCTURE_SPAWN || s.structureType == STRUCTURE_EXTENSION) && s.store.getUsedCapacity("energy") > 0 
+                var Containers = creep.pos.findInRange(FIND_STRUCTURES, 35, {
+                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_EXTENSION) && s.store.getUsedCapacity("energy") > 0 
                 });
                 
                 if (Containers.length) {
@@ -41,13 +41,13 @@ var roleUpgrader = {
                     }
                 }
                 else {
-                    creep.moveTo(35, 25);
+                    creep.moveTo(31, 23);
                 }
                 
                 
             }
             else {
-                creep.returnHome();
+                creep.moveTo(31, 23);
             }
         }
     }

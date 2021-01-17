@@ -22,18 +22,17 @@ var roleBuilder = {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             } else {
-                creep.moveTo(Game.spawns["DannyS"]);
+                creep.returnHome();
             }
         }
         //Else gather energy
         else {
             
             //If there is sufficient energy in spawn withdraw from there
-            if (creep.room.energyAvailable > 500 && !Game.getObjectById(creep.memory.homeSpawn.id).memory.spawnWaiting) {
+            if (creep.room.energyAvailable > 100) {
                 var Container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (s) => (s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_CONTAINER) && s.store[RESOURCE_ENERGY] > 0 
+                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_EXTENSION) && s.store[RESOURCE_ENERGY] > 0 
                 });
-                
                 if (creep.withdraw(Container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(Container, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }

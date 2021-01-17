@@ -1,10 +1,3 @@
-var roleHarvester = require("role.harvester");
-var roleUpgrader = require("role.upgrader");
-var roleBuilder = require("role.builder");
-var roleRepairer = require("role.repairer");
-var roleDefender = require("role.defender");
-var roleCreep = require("role.creep");
-
 require("creep.prototype");
 
 
@@ -38,24 +31,7 @@ module.exports.loop = function () {
     	//Run Creeps
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
-            roleCreep.run(creep);
-            if (creep.memory.role == "repairer") {
-                roleRepairer.run(creep);
-            }
-            if (creep.memory.role == "harvester") {
-                roleHarvester.run(creep);
-            }
-            if (creep.memory.role == "upgrader") {
-                roleUpgrader.run(creep);
-            }
-            if (creep.memory.role == "builder") {
-                roleBuilder.run(creep);
-            }
-            if (creep.memory.role == "defender") {
-                roleDefender.run(creep);
-            }
-
-            
+            creep.execute();
         }
         
         //Run spawn behavior

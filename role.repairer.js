@@ -61,12 +61,10 @@ var roleRepairer = {
         //Else gather energy
         else {
             
-            //If there is sufficient energy in spawn withdraw from there
-            if (creep.room.energyAvailable > 300) {
+            if (creep.room.energyAvailable > 100) {
                 var Container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (s) => (s.structureType == STRUCTURE_EXTENSION || s.structureType == STRUCTURE_CONTAINER) && s.store[RESOURCE_ENERGY] > 0 
+                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER) && s.store[RESOURCE_ENERGY] > 0 
                 });
-                console.log(Container);
                 if (creep.withdraw(Container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(Container, {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
