@@ -21,12 +21,12 @@ var roleRepairer = {
         if(creep.memory.repairing) {  
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    //Don't repair roads right now, they decay too quickly and there are more important matters
-                    return ((structure.hits < creep.memory.threshold && structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_ROAD && structure.structureType != STRUCTURE_CONTROLLER && structure.structureType != STRUCTURE_EXTENSION && structure.structureType != STRUCTURE_SPAWN) 
-                        || (structure.structureType == STRUCTURE_RAMPART && structure.hits < structure.hitsMax));
+                    
+                    return (structure.hits < creep.memory.threshold && structure.hits < structure.hitsMax && (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_CONTAINER)) ;
                 }
             });
-            
+            //Sort roads by lowest amount of hit points
+            targets.sort(function(s1, s2){return s1.hits - s2.hits});
             if(targets.length) {
                 
                 var chosenTargets;
@@ -61,9 +61,9 @@ var roleRepairer = {
         //Else gather energy
         else {
             
-            if (creep.room.energyAvailable > 100) {
+            if (!Game.getObjectById(creep.memory.homeSpawnID).memory.spawnWaiting) {
                 var Container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER) && s.store[RESOURCE_ENERGY] > 0 
+                    filter: (s) => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_EXTENSION) && s.store[RESOURCE_ENERGY] > 0 
                 });
                 if (creep.withdraw(Container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(Container, {visualizePathStyle: {stroke: '#ffaa00'}});

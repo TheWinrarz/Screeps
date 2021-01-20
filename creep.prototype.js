@@ -3,38 +3,42 @@ var roleUpgrader = require("role.upgrader");
 var roleBuilder = require("role.builder");
 var roleRepairer = require("role.repairer");
 var roleDefender = require("role.defender");
+var roleTransporter = require("role.transporter");
 var roleCreep = require("role.creep");
-
+var roleGatherer = require("role.gatherer");
+var roleStaticHarvester = require("role.staticHarvester");
 
 Creep.prototype.execute = function() {
     
     	//Run Creeps
-        if (this.ticksToLive < 50){
-            if (Game.getObjectById(this.memory.homeSpawnID).renewCreep(this) == ERR_NOT_IN_RANGE){
-                this.returnHome()
-            }
+
+        roleCreep.run(this);
+        if (this.memory.role == "repairer") {
+            roleRepairer.run(this);
         }
-        else {
-        
-            roleCreep.run(this);
-            if (this.memory.role == "repairer") {
-                roleRepairer.run(this);
-            }
-            else if (this.memory.role == "harvester") {
-                roleHarvester.run(this);
-            }
-            else if (this.memory.role == "upgrader") {
-                roleUpgrader.run(this);
-            }
-            else if (this.memory.role == "builder") {
-                roleBuilder.run(this);
-            }
-            else if (this.memory.role == "defender") {
-                roleDefender.run(this);
-            }
+        else if (this.memory.role == "harvester") {
+            roleHarvester.run(this);
+        }
+        else if (this.memory.role == "upgrader") {
+            roleUpgrader.run(this);
+        }
+        else if (this.memory.role == "builder") {
+            roleBuilder.run(this);
+        }
+        else if (this.memory.role == "defender") {
+            roleDefender.run(this);
+        }
+        else if (this.memory.role == "transporter") {
+            roleTransporter.run(this);
+        }
+        else if (this.memory.role == "gatherer") {
+            roleGatherer.run(this);
+        }
+        else if (this.memory.role == "static_harvester") {
+            roleStaticHarvester.run(this);
+        }
 
             
-        }
 }
 
 
@@ -44,7 +48,16 @@ Creep.prototype.returnHome = function() {
     }
 }
 
+Creep.prototype.isEmpty = function() {
+    return (this.store.getUsedCapacity() == 0);
+}
 
-Creep.prototype.getRenewed = function() {
+
+Creep.prototype.acquireTarget = function(room, role) {
+    
+    if(role == "static_harvester") {
+        var sources = room.find(FIND_SOURCES);
+    }
     
 }
+

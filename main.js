@@ -1,5 +1,6 @@
 require("creep.prototype");
-
+require("tower.prototype");
+//var RoomManager = require("manager.room");
 
 var roleSpawn = require("building.spawn");
 
@@ -27,7 +28,18 @@ module.exports.loop = function () {
             }
         }
         
+        //////////////////////
+        //Room based logic
+        //////////////////////
+        /*
+        for(var roomName in Game.rooms){
+            let room = Game.rooms[roomName]; 
+            RoomManager.run(room);
+        }
 
+
+
+        */
     	//Run Creeps
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
@@ -38,6 +50,12 @@ module.exports.loop = function () {
         for(var name in Game.spawns) {
             var spawn = Game.spawns[name];
             roleSpawn.run(spawn);
+        }
+        
+        //Run tower behavior
+        var towers = _.filter(Game.structures, structure => structure.structureType == STRUCTURE_TOWER);
+        for(var tower of Object.values(towers)) {
+            tower.execute();
         }
 
         //Get end bucket value and calculate delta

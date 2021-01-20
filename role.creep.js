@@ -9,6 +9,10 @@ var roleCreep = {
             creep.memory.homeSpawnID = Game.spawns["DannyS"].id;
         }
         
+        if (!creep.memory.CREEP_STATE) {
+            creep.memory.CREEP_STATE = "waiting";
+        }
+        
         
     }
     
